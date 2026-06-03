@@ -46,7 +46,12 @@ function calcularMistura() {
     const pA = elA.value;
     const pB = elB.value;
 
-    if (!pA || !pB) { resetarSimulador(); return; }
+    // CORREÇÃO AQUI: Se faltar um produto, ele apenas espera, sem apagar o que já foi selecionado.
+    if (!pA || !pB) { 
+        atualizarInterface("estado-espera", "🔬", "Aguardando Parâmetros", "Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.", []);
+        document.getElementById('dadosQuimicos').style.display = "none";
+        return; 
+    }
 
     const nomeA = elA.options[elA.selectedIndex].text;
     const nomeB = elB.options[elB.selectedIndex].text;
