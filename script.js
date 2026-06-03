@@ -46,13 +46,22 @@ function calcularMistura() {
     const pA = elA.value;
     const pB = elB.value;
 
-    // CORREÇÃO AQUI: Se faltar um produto, ele apenas espera, sem apagar o que já foi selecionado.
-    if (!pA || !pB) { 
+    // Cenário 1: Nenhum selecionado
+    if (!pA && !pB) { 
         atualizarInterface("estado-espera", "🔬", "Aguardando Parâmetros", "Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.", []);
         document.getElementById('dadosQuimicos').style.display = "none";
         return; 
     }
 
+    // Cenário 2: APENAS UM selecionado (NOVO: Dá o aviso na tela de que registrou)
+    if (!pA || !pB) {
+        let nomeSelecionado = pA ? elA.options[elA.selectedIndex].text : elB.options[elB.selectedIndex].text;
+        atualizarInterface("estado-espera", "⏳", "Aguardando 2º Produto", `Você selecionou: ${nomeSelecionado}. Agora escolha o outro componente químico para processar a análise.`, []);
+        document.getElementById('dadosQuimicos').style.display = "none";
+        return;
+    }
+
+    // Cenário 3: Os DOIS selecionados (Faz a análise química)
     const nomeA = elA.options[elA.selectedIndex].text;
     const nomeB = elB.options[elB.selectedIndex].text;
 
