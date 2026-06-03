@@ -1,3 +1,29 @@
+const CACHE_NAME = 'limpapp-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
+];
+
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS);
+        })
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
 let textoUltimoAlerta = "";
 let laudoAtual = ""; 
 let historicoTestes = [];
@@ -178,7 +204,8 @@ function calcularMistura() {
     adicionarAoHistorico(nomeA, nomeB, tipo, titulo);
     prepararTexto(titulo, descricao);
     
-    laudoAtual = `🧪 ChemShield Pro - Relatório de Mistura\n\nReagentes:\n1. ${nomeA} [pH: ${dadosA.ph}]\n2. ${nomeB} [pH: ${dadosB.ph}]\n\n⚠️ Status: ${titulo}\n🔬 Análise: ${descricao}\n🦠 Sintomas: ${sintomas}\n\n🛡️ EPIs Necessários: ${epis.join(", ")}`;
+    // Atualizado para LimpApp
+    laudoAtual = `🧪 LimpApp - Relatório de Mistura\n\nReagentes:\n1. ${nomeA} [pH: ${dadosA.ph}]\n2. ${nomeB} [pH: ${dadosB.ph}]\n\n⚠️ Status: ${titulo}\n🔬 Análise: ${descricao}\n🦠 Sintomas: ${sintomas}\n\n🛡️ EPIs Necessários: ${epis.join(", ")}`;
 }
 
 function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA = null, dadoB = null, acao = "", sintomas = "") {
@@ -267,7 +294,8 @@ function exportarDados() {
         return;
     }
     
-    let conteudo = "--- DIÁRIO DE TESTES: CHEMSHIELD PRO ---\n\n";
+    // Atualizado para LimpApp
+    let conteudo = "--- DIÁRIO DE TESTES: LIMPAPP ---\n\n";
     historicoTestes.forEach((teste, index) => {
         conteudo += `Teste #${index + 1}\n`;
         conteudo += `Reagentes: ${teste.p1} + ${teste.p2}\n`;
@@ -279,7 +307,7 @@ function exportarDados() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Diario_ChemShieldPro.txt";
+    link.download = "Diario_LimpApp.txt"; // Atualizado para LimpApp
     link.click();
     URL.revokeObjectURL(url);
 }
