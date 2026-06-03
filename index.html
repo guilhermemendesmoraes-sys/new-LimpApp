@@ -3,14 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Segurança: Misturas de Limpeza</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Simulador de Segurança Química de Limpeza - Master</title>
+    <style>
+        /* --- ESTILIZAÇÃO VISUAL (CSS) --- */
+        :root {
+            --cor-seguro: #2ecc71;
+            --cor-perigo: #e74c3c;
+            --cor-atencao: #f39c12;
+            --cor-fundo: #f4f6f9;
+            --cor-card: #ffffff;
+            --cor-texto: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--cor-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 35px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+            color: #1a252f;
+        }
+
+        .subtitulo {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .painel-selecao {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .campo {
+            flex: 1;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dcdde1;
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--cor-texto);
+            background-color: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            border-color: #3498db;
+        }
+
+        .resultado-box {
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+            display: none;
+            text-align: left;
+            animation: deslizarAparecer 0.4s ease forwards;
+        }
+
+        .resultado-box.seguro {
+            display: block;
+            background-color: #e8f8f5;
+            border-left: 6px solid var(--cor-seguro);
+        }
+
+        .resultado-box.atencao {
+            display: block;
+            background-color: #fef5e7;
+            border-left: 6px solid var(--cor-atencao);
+        }
+
+        .resultado-box.perigo {
+            display: block;
+            background-color: #fcedec;
+            border-left: 6px solid var(--cor-perigo);
+        }
+
+        .status-titulo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .resultado-box.seguro .status-titulo { color: #117a65; }
+        .resultado-box.atencao .status-titulo { color: #b7950b; }
+        .resultado-box.perigo .status-titulo { color: #943126; }
+
+        .status-descricao {
+            font-size: 14.5px;
+            line-height: 1.5;
+            color: #34495e;
+        }
+
+        @keyframes deslizarAparecer {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Simulador de Misturas Químicas</h1>
-        <p class="subtitulo">Descubra se a combinação de produtos de limpeza doméstica é segura ou perigosa.</p>
+        <p class="subtitulo">Descubra se a combinação de produtos de limpeza doméstica e solventes é segura ou perigosa.</p>
 
         <div class="painel-selecao">
             <div class="campo">
@@ -18,10 +147,18 @@
                 <select id="produtoA" onchange="calcularMistura()">
                     <option value="">Selecione um produto...</option>
                     <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
-                    <option value="vinagre">Vinagre (Ácido)</option>
+                    <option value="vinagre">Vinagre (Ácido Acético)</option>
                     <option value="amonia">Amoníaco (Amônia)</option>
                     <option value="alcool">Álcool Etílico</option>
                     <option value="detergente">Detergente Neutro</option>
+                    <option value="agua_oxigenada">Água Oxigenada</option>
+                    <option value="bicarbonato">Bicarbonato de Sódio</option>
+                    <option value="desinfetante_pinho">Desinfetante de Pinho</option>
+                    <option value="soda_caustica">Limpador de Forno (Soda Cáustica)</option>
+                    <option value="sabao_po">Sabão em Pó / Detergente Pó</option>
+                    <option value="removedor_ferrugem">Removedor de Ferrugem (Ácido Forte)</option>
+                    <option value="acetona">Acetona (Solvente)</option>
+                    <option value="desengordurante">Desengordurante de Cozinha</option>
                 </select>
             </div>
 
@@ -30,10 +167,18 @@
                 <select id="produtoB" onchange="calcularMistura()">
                     <option value="">Selecione um produto...</option>
                     <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
-                    <option value="vinagre">Vinagre (Ácido)</option>
+                    <option value="vinagre">Vinagre (Ácido Acético)</option>
                     <option value="amonia">Amoníaco (Amônia)</option>
                     <option value="alcool">Álcool Etílico</option>
                     <option value="detergente">Detergente Neutro</option>
+                    <option value="agua_oxigenada">Água Oxigenada</option>
+                    <option value="bicarbonato">Bicarbonato de Sódio</option>
+                    <option value="desinfetante_pinho">Desinfetante de Pinho</option>
+                    <option value="soda_caustica">Limpador de Forno (Soda Cáustica)</option>
+                    <option value="sabao_po">Sabão em Pó / Detergente Pó</option>
+                    <option value="removedor_ferrugem">Removedor de Ferrugem (Ácido Forte)</option>
+                    <option value="acetona">Acetona (Solvente)</option>
+                    <option value="desengordurante">Desengordurante de Cozinha</option>
                 </select>
             </div>
         </div>
@@ -44,6 +189,100 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        function calcularMistura() {
+            const pA = document.getElementById('produtoA').value;
+            const pB = document.getElementById('produtoB').value;
+            const quadro = document.getElementById('quadroResultado');
+            const titulo = document.getElementById('statusTitulo');
+            const descricao = document.getElementById('statusDescricao');
+
+            if (!pA || !pB) {
+                quadro.className = "resultado-box";
+                return;
+            }
+
+            if (pA === pB) {
+                mostrarResposta("seguro", "✓ Mistura sem reação", "Misturar o mesmo tipo de elemento não gera novas reações, apenas aumenta o volume do produto.");
+                return;
+            }
+
+            const combinacao = [pA, pB].sort().join('_+_');
+
+            switch(combinacao) {
+                // --- CATEGORIA: PERIGO EXTREMO (VERMELHO) ---
+                case "agua_sanitaria_+_vinagre":
+                    mostrarResposta("perigo", "✕ PERIGO EXTREMO: Gás Cloro", "A mistura de água sanitária (hipoclorito) com ácidos leves (vinagre) libera o Gás Cloro. Extremamente sufocante, tóxico e corrosivo para as vias aéreas.");
+                    break;
+                case "agua_sanitaria_+_removedor_ferrugem":
+                    mostrarResposta("perigo", "✕ PERIGO EXTREMO: Gás Cloro Violento", "Removedores de ferrugem contêm ácidos fortes. Misturá-los com Água Sanitária libera uma nuvem densa e imediata de Gás Cloro altamente letal.");
+                    break;
+                case "agua_sanitaria_+_amonia":
+                    mostrarResposta("perigo", "✕ PERIGO EXTREMO: Cloraminas", "Gera gases tóxicos chamados cloraminas. Causam severa falta de ar, irritação ocular insuportável e podem causar pneumonia química.");
+                    break;
+                case "agua_sanitaria_+_alcool":
+                case "acetona_+_agua_sanitaria":
+                    mostrarResposta("perigo", "✕ PERIGO: Clorofórmio / Reação Halofórmica", "A mistura de cloro com álcool ou acetona gera compostos voláteis tóxicos como o Clorofórmio. Causa danos hepáticos, tonturas, náuseas e desmaios se inalado.");
+                    break;
+                case "agua_oxigenada_+_vinagre":
+                    mostrarResposta("perigo", "✕ PERIGO: Ácido Peracético Corrosivo", "Cria o ácido peracético. Embora seja um desinfetante industrial, em ambiente doméstico exala vapores altamente irritantes para a pele, olhos e sistema respiratório.");
+                    break;
+                case "agua_sanitaria_+_desinfetante_pinho":
+                    mostrarResposta("perigo", "✕ PERIGO: Compostos Organoclorados", "Desinfetantes com óleo de pinho ou compostos fenólicos reagem com o hipoclorito gerando subprodutos tóxicos e irritantes voláteis.");
+                    break;
+                case "removedor_ferrugem_+_soda_caustica":
+                case "soda_caustica_+_vinagre":
+                    mostrarResposta("perigo", "✕ PERIGO: Reação Exotérmica Violenta", "A união direta de um ácido forte/médio com uma base extremamente forte (soda cáustica) causa uma neutralização que ferve instantaneamente, gerando risco de respingos ferventes e corrosivos.");
+                    break;
+
+                // --- CATEGORIA: ATENÇÃO E INEFICÁCIA (AMARELO) ---
+                case "bicarbonato_+_vinagre":
+                case "bicarbonato_+_removedor_ferrugem":
+                    mostrarResposta("atencao", "⚠ ATENÇÃO: Forte Efervescência ($CO_2$)", "Ocorre uma reação ácido-base que gera grandes volumes de gás carbônico rápido demais. Se misturado em recipientes fechados (garrafas), pode explodir o frasco. Quimicamente, os produtos se anulam.");
+                    break;
+                case "bicarbonato_+_soda_caustica":
+                    mostrarResposta("atencao", "⚠ ATENÇÃO: Reação Inútil", "Ambos são substâncias alcalinas. Misturá-los não causa explosão, mas satura a solução e anula as qualidades específicas de remoção de gordura da soda cáustica.");
+                    break;
+                case "agua_sanitaria_+_sabao_po":
+                    mostrarResposta("atencao", "⚠ ATENÇÃO: Redução de Eficácia", "Muitos sabões em pó possuem enzimas ou compostos que são destruídos pelo poder oxidante do cloro, fazendo com que um anule a eficiência de limpeza do outro.");
+                    ...
+                case "acetona_+_alcool":
+                    mostrarResposta("atencao", "⚠ ATENÇÃO: Alto Risco de Inflamabilidade", "Não gera gases tóxicos novos, mas cria uma solução extremamente volátil e inflamável. O menor risco de faísca elétrica ou calor pode iniciar um incêndio de difícil controle.");
+                    break;
+
+                // --- CATEGORIA: SEGURO (VERDE) ---
+                case "alcool_+_vinagre":
+                case "desengordurante_+_vinagre":
+                    mostrarResposta("seguro", "✓ Mistura Segura", "Muito utilizada em truques de limpeza caseira. Ajuda na remoção de manchas e brilho em vidros sem gerar toxinas.");
+                    break;
+                case "agua_sanitaria_+_detergente":
+                case "alcool_+_detergente":
+                case "amonia_+_detergente":
+                case "detergente_+_vinagre":
+                case "agua_oxigenada_+_detergente":
+                case "desengordurante_+_detergente":
+                case "detergente_+_sabao_po":
+                    mostrarResposta("seguro", "✓ Mistura Segura", "O detergente neutro é formulado para ser um surfactante estável. Ele se mistura bem com ácidos, bases e álcoois sem provocar reações perigosas.");
+                    break;
+                case "desengordurante_+_sabao_po":
+                case "alcool_+_desengordurante":
+                    mostrarResposta("seguro", "✓ Mistura Segura", "Aumenta o poder de desengordurar superfícies sem riscos de reações nocivas. Lembre-se apenas de usar luvas para evitar o ressecamento da pele.");
+                    break;
+
+                default:
+                    mostrarResposta("seguro", "✓ Sem riscos graves conhecidos", "Esta combinação específica é quimicamente estável ou não apresenta riscos à saúde conhecidos. Mantenha os ambientes arejados durante o uso.");
+            }
+        }
+
+        function mostrarResposta(tipo, textoTitulo, textoDescricao) {
+            const quadro = document.getElementById('quadroResultado');
+            const titulo = document.getElementById('statusTitulo');
+            const descricao = document.getElementById('statusDescricao');
+
+            quadro.className = `resultado-box ${tipo}`;
+            titulo.innerText = textoTitulo;
+            descricao.innerText = textoDescricao;
+        }
+    </script>
 </body>
 </html>
