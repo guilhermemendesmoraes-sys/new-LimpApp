@@ -21,7 +21,7 @@
         <div class="dashboard-grid">
             
             <div class="coluna-principal">
-                <section class="painel-selecao">
+                <section class="painel-selecao nao-imprimir">
                     <div class="campo-selecao">
                         <label for="produtoA">1º Componente Alvo</label>
                         <select id="produtoA" onchange="calcularMistura()">
@@ -72,16 +72,28 @@
                 </section>
 
                 <section id="quadroResultado" class="resultado-card estado-espera">
+                    
+                    <div class="barra-risco-container">
+                        <div id="barraRisco" class="barra-risco-preenchimento"></div>
+                    </div>
+
                     <div class="resultado-header">
                         <span id="resultadoIcone" class="resultado-icone">🔬</span>
                         <div class="titulo-wrapper">
                             <h2 id="statusTitulo" class="status-titulo">Aguardando Parâmetros</h2>
                         </div>
-                        <div class="botoes-acoes">
+                        <div class="botoes-acoes nao-imprimir">
+                            <button id="btnRelatorio" class="btn-acao btn-print" onclick="window.print()" title="Imprimir Laudo" style="display: none;">📄 Relatório</button>
                             <button id="btnRepetir" class="btn-acao" onclick="repetirAudio()" title="Ouvir novamente" style="display: none;">🔊 Repetir</button>
                             <button id="btnLimpar" class="btn-acao btn-danger" onclick="resetarSimulador()" title="Limpar seleção">🔄 Limpar</button>
                         </div>
                     </div>
+
+                    <div id="dadosQuimicos" class="dados-quimicos" style="display: none;">
+                        <div class="dado-item"><span class="dado-label">Reagente A:</span> <span id="nomeCientificoA"></span></div>
+                        <div class="dado-item"><span class="dado-label">Reagente B:</span> <span id="nomeCientificoB"></span></div>
+                    </div>
+
                     <p id="statusDescricao" class="status-descricao">Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.</p>
                     
                     <div id="blocoEpis" class="epi-container" style="display: none;">
@@ -91,7 +103,7 @@
                 </section>
             </div>
 
-            <aside class="coluna-lateral">
+            <aside class="coluna-lateral nao-imprimir">
                 <div class="info-card emergencia">
                     <h3>🚨 Protocolo de Emergência</h3>
                     <p>Em caso de acidentes ou inalação de gases provocados por misturas inadequadas:</p>
@@ -115,7 +127,7 @@
 
         </div>
 
-        <footer class="app-footer">
+        <footer class="app-footer nao-imprimir">
             <p>Desenvolvido estritamente para fins informativos e didáticos. O software não substitui as fichas técnicas oficiais (FISPQ) dos fabricantes.</p>
         </footer>
     </div>

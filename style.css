@@ -1,4 +1,4 @@
-/* --- ESTILIZAÇÃO DASHBOARD AVANÇADO (CSS) --- */
+/* --- ESTILIZAÇÃO DASHBOARD AVANÇADO E MODO IMPRESSÃO (CSS) --- */
 
 :root {
     --bg-global: #0b0f19;
@@ -16,14 +16,10 @@
     --bg-perigo: rgba(248, 113, 113, 0.12);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     background-color: var(--bg-global);
     color: var(--texto-principal);
     min-height: 100vh;
@@ -43,279 +39,92 @@ body {
     box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
-/* Header Estilizado */
-.app-header {
-    text-align: center;
-    margin-bottom: 35px;
-    position: relative;
-}
-
-.logo-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
+.app-header { text-align: center; margin-bottom: 35px; position: relative; }
+.logo-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
 .logo-shield { font-size: 42px; display: inline-block; }
-.logo-hazard { 
-    font-size: 20px; 
-    position: absolute; 
-    bottom: 0; 
-    right: -5px; 
-    animation: piscarAlerta 1.5s infinite;
-}
+.logo-hazard { font-size: 20px; position: absolute; bottom: 0; right: -5px; animation: piscarAlerta 1.5s infinite; }
+.gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitulo { color: var(--texto-secundario); font-size: 15px; max-width: 600px; margin: 8px auto 0; line-height: 1.5; }
 
-.gradient-text {
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+.dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 30px; }
 
-.subtitulo {
-    color: var(--texto-secundario);
-    font-size: 15px;
-    max-width: 600px;
-    margin: 8px auto 0;
-    line-height: 1.5;
-}
-
-/* Layout em Grid (Duas Colunas) */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 30px;
-}
-
-/* Painel de Seleção */
-.painel-selecao {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: var(--bg-input);
-    border: 1px solid var(--borda-padrao);
-    padding: 20px;
-    border-radius: 20px;
-    margin-bottom: 25px;
-}
-
+.painel-selecao { display: flex; align-items: center; gap: 15px; background-color: var(--bg-input); border: 1px solid var(--borda-padrao); padding: 20px; border-radius: 20px; margin-bottom: 25px; }
 .campo-selecao { flex: 1; }
-.campo-selecao label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--texto-secundario);
-    margin-bottom: 8px;
-}
+.campo-selecao label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--texto-secundario); margin-bottom: 8px; }
+select { width: 100%; padding: 14px 16px; background-color: var(--bg-global); border: 1px solid var(--borda-padrao); border-radius: 12px; color: var(--texto-principal); font-size: 14.5px; outline: none; cursor: pointer; transition: all 0.25s ease; }
+select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25); }
+.divisor-vs { font-weight: 900; color: #334155; font-size: 14px; margin-top: 18px; background-color: var(--bg-global); padding: 8px 12px; border-radius: 50%; border: 1px solid var(--borda-padrao); }
 
-select {
-    width: 100%;
-    padding: 14px 16px;
-    background-color: var(--bg-global);
-    border: 1px solid var(--borda-padrao);
-    border-radius: 12px;
-    color: var(--texto-principal);
-    font-size: 14.5px;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
+.resultado-card { border-radius: 20px; padding: 30px; border: 1px solid var(--borda-padrao); background-color: var(--bg-input); transition: all 0.3s ease; position: relative; overflow: hidden; }
 
-select:focus {
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
-}
+/* Nova Barra de Risco Visual */
+.barra-risco-container { width: 100%; height: 6px; background-color: var(--borda-padrao); position: absolute; top: 0; left: 0; }
+.barra-risco-preenchimento { height: 100%; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease; }
 
-.divisor-vs {
-    font-weight: 900;
-    color: #334155;
-    font-size: 14px;
-    margin-top: 18px;
-    background-color: var(--bg-global);
-    padding: 8px 12px;
-    border-radius: 50%;
-    border: 1px solid var(--borda-padrao);
-}
-
-/* Card de Resultado Principal */
-.resultado-card {
-    border-radius: 20px;
-    padding: 30px;
-    border: 1px solid var(--borda-padrao);
-    background-color: var(--bg-input);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.resultado-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 14px;
-    justify-content: space-between;
-}
-
-.titulo-wrapper {
-    flex: 1;
-}
-
+.resultado-header { display: flex; align-items: center; gap: 15px; margin-bottom: 14px; margin-top: 10px; justify-content: space-between; }
+.titulo-wrapper { flex: 1; }
 .resultado-icone { font-size: 28px; }
 .status-titulo { font-size: 22px; font-weight: 700; }
+
+/* Novos Dados Químicos */
+.dados-quimicos { background-color: var(--bg-global); border: 1px dashed var(--borda-padrao); padding: 12px; border-radius: 10px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+.dado-item { font-size: 13.5px; font-family: monospace; color: #94a3b8; }
+.dado-label { font-weight: bold; color: var(--texto-secundario); font-family: 'Segoe UI', sans-serif; }
+
 .status-descricao { font-size: 15px; line-height: 1.6; color: #94a3b8; }
 
-/* Botões de Ações */
-.botoes-acoes {
-    display: flex;
-    gap: 8px;
-}
+.botoes-acoes { display: flex; gap: 8px; }
+.btn-acao { background-color: var(--borda-padrao); border: 1px solid transparent; color: var(--texto-principal); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.btn-acao:hover { background-color: #2e4463; }
+.btn-danger { background-color: #3f1e1e; color: #f87171; }
+.btn-danger:hover { background-color: #552424; }
+.btn-print { background-color: #1e3a8a; color: #bfdbfe; }
+.btn-print:hover { background-color: #1e40af; }
 
-.btn-acao {
-    background-color: var(--borda-padrao);
-    border: 1px solid transparent;
-    color: var(--texto-principal);
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-acao:hover {
-    background-color: #2e4463;
-}
-
-.btn-danger {
-    background-color: #3f1e1e;
-    color: #f87171;
-}
-
-.btn-danger:hover {
-    background-color: #552424;
-}
-
-/* Bloco de EPIs */
-.epi-container {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid var(--borda-padrao);
-}
-
-.epi-container h3 {
-    font-size: 13px;
-    color: var(--texto-principal);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-}
-
+.epi-container { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--borda-padrao); }
+.epi-container h3 { font-size: 13px; color: var(--texto-principal); text-transform: uppercase; margin-bottom: 12px; }
 .epi-lista { display: flex; gap: 10px; flex-wrap: wrap; }
-.epi-item {
-    background-color: var(--bg-global);
-    border: 1px solid var(--borda-padrao);
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+.epi-item { background-color: var(--bg-global); border: 1px solid var(--borda-padrao); padding: 8px 14px; border-radius: 8px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
 
-/* Estados Dinâmicos do Card */
+/* Estados Dinâmicos */
 .resultado-card.seguro { border-color: var(--cor-seguro); background-color: var(--bg-seguro); }
 .resultado-card.seguro .status-titulo { color: var(--cor-seguro); }
-.resultado-card.seguro .status-descricao { color: #cbd5e1; }
+.resultado-card.seguro .barra-risco-preenchimento { width: 15%; background-color: var(--cor-seguro); }
 
 .resultado-card.atencao { border-color: var(--cor-atencao); background-color: var(--bg-atencao); }
 .resultado-card.atencao .status-titulo { color: var(--cor-atencao); }
-.resultado-card.atencao .status-descricao { color: #cbd5e1; }
+.resultado-card.atencao .barra-risco-preenchimento { width: 50%; background-color: var(--cor-atencao); }
 
-.resultado-card.perigo { 
-    border-color: var(--cor-perigo); 
-    background-color: var(--bg-perigo);
-    animation: sacudir 0.4s ease-in-out;
-}
+.resultado-card.perigo { border-color: var(--cor-perigo); background-color: var(--bg-perigo); animation: sacudir 0.4s ease-in-out; }
 .resultado-card.perigo .status-titulo { color: var(--cor-perigo); }
-.resultado-card.perigo .status-descricao { color: #fecdd3; }
+.resultado-card.perigo .barra-risco-preenchimento { width: 100%; background-color: var(--cor-perigo); box-shadow: 0 0 10px var(--cor-perigo); }
 
-/* Coluna Lateral Informativa */
 .coluna-lateral { display: flex; flex-direction: column; gap: 20px; }
-.info-card {
-    background-color: var(--bg-input);
-    border: 1px solid var(--borda-padrao);
-    border-radius: 20px;
-    padding: 22px;
-}
-
+.info-card { background-color: var(--bg-input); border: 1px solid var(--borda-padrao); border-radius: 20px; padding: 22px; }
 .info-card h3 { font-size: 16px; margin-bottom: 12px; font-weight: 600; }
-.info-card p { font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px; }
-.info-card ul { list-style-position: inside; font-size: 13px; color: #94a3b8; }
-.info-card li { margin-bottom: 6px; }
+.info-card p, .info-card ul { font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px; }
+.tel-item { flex: 1; background-color: var(--bg-global); border: 1px solid var(--borda-padrao); padding: 8px; border-radius: 8px; font-size: 12px; text-align: center; }
 
-.telefones-uteis {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-.tel-item {
-    flex: 1;
-    background-color: var(--bg-global);
-    border: 1px solid var(--borda-padrao);
-    padding: 8px;
-    border-radius: 8px;
-    font-size: 12px;
-    text-align: center;
-}
-
-/* Histórico Lateral */
-.lista-historico {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.historico-item {
-    background-color: var(--bg-global);
-    border-left: 3px solid var(--borda-padrao);
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 12.5px;
-}
-
+.lista-historico { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+.historico-item { background-color: var(--bg-global); border-left: 3px solid var(--borda-padrao); padding: 8px 12px; border-radius: 4px; font-size: 12.5px; }
 .historico-item.p-seguro { border-left-color: var(--cor-seguro); }
 .historico-item.p-atencao { border-left-color: var(--cor-atencao); }
 .historico-item.p-perigo { border-left-color: var(--cor-perigo); }
 
-.historico-vazio {
-    font-size: 13px;
-    color: var(--texto-secundario);
-    text-align: center;
-    font-style: italic;
+.app-footer { text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--borda-padrao); font-size: 12px; color: var(--texto-secundario); }
+
+@keyframes sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* === MAGIA DA FEIRA DE CIÊNCIAS: MODO IMPRESSÃO PDF === */
+@media print {
+    body { background-color: white; color: black; padding: 0; }
+    .nao-imprimir { display: none !important; }
+    .app-container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
+    .dashboard-grid { grid-template-columns: 1fr; display: block; }
+    .resultado-card { border: 2px solid #000; background-color: white; break-inside: avoid; }
+    .dados-quimicos { border-color: #000; color: #000; }
+    .dado-item, .status-descricao, .status-titulo { color: #000 !important; }
 }
 
-.app-footer { text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--borda-padrao); }
-.app-footer p { font-size: 12px; color: var(--texto-secundario); }
-
-/* Animações Complexas */
-@keyframes piscarAlerta {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-
-@keyframes sacudir {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-}
-
-/* Responsividade de Tela */
-@media (max-width: 900px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .app-container { padding: 25px; }
-}
-@media (max-width: 600px) {
-    .painel-selecao { flex-direction: column; }
-    .divisor-vs { margin: 5px 0; transform: rotate(90deg); }
-}
+@media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .painel-selecao { flex-direction: column; } }
