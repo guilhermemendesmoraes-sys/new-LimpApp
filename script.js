@@ -1,13 +1,10 @@
-// --- SISTEMA DE VOZ E LÓGICA DE SIMULAÇÃO (JAVASCRIPT) ---
+// --- SISTEMA DE VOZ E LÓGICA DE SIMULAÇÃO ATUALIZADA (JAVASCRIPT) ---
 
-// Função responsável por fazer o navegador falar em português
 function falarTexto(mensagem) {
-    // Cancela qualquer fala anterior que esteja tocando para não encavalar as vozes
     window.speechSynthesis.cancel();
-    
     const falar = new SpeechSynthesisUtterance(mensagem);
-    falar.lang = 'pt-BR'; // Define o idioma para português do Brasil
-    falar.rate = 1.1;     // Ajusta a velocidade para uma dicção mais natural
+    falar.lang = 'pt-BR';
+    falar.rate = 1.1;
     window.speechSynthesis.speak(falar);
 }
 
@@ -16,20 +13,17 @@ function calcularMistura() {
     const pB = document.getElementById('produtoB').value;
     const quadro = document.getElementById('quadroResultado');
 
-    // Se um dos produtos não estiver selecionado, limpa a tela e para o áudio
     if (!pA || !pB) {
         quadro.className = "resultado-box";
         window.speechSynthesis.cancel();
         return;
     }
 
-    // Se os produtos forem iguais
     if (pA === pB) {
         mostrarResposta("seguro", "Mistura sem reação", "Misturar compostos idênticos não altera as propriedades químicas originais, modificando apenas o volume do produto.");
         return;
     }
 
-    // Organiza os itens selecionados em ordem alfabética para validação das chaves
     const combinacao = [pA, pB].sort().join('_+_');
 
     switch(combinacao) {
@@ -61,6 +55,19 @@ function calcularMistura() {
             mostrarResposta("perigo", "Perigo: Neutralização exotérmica violenta", "A reação direta entre um ácido e uma base forte como a soda cáustica libera calor de forma abrupta, podendo ferver o líquido e causar respingos corrosivos.");
             break;
 
+        // --- NOVOS ALERTAS CRÍTICOS DO QUEROSENE (VERMELHO) ---
+        case "agua_sanitaria_+_querosene":
+            mostrarResposta("perigo", "Perigo crítico: Oxidação de Solvente e Gases Tóxicos", "A água sanitária reage de forma agressiva tentando oxidar o querosene. Isso gera calor e libera vapores químicos combinados que são altamente tóxicos para o sistema respiratório e nervoso.");
+            break;
+        case "limpador_aluminio_+_querosene":
+        case "querosene_+_removedor_ferrugem":
+        case "querosene_+_vinagre":
+            mostrarResposta("perigo", "Perigo: Instabilidade Química e Vapores Tóxicos", "A mistura de querosene com ácidos fortes ou fracos quebra a estabilidade do solvente orgânico. Isso acelera a evaporação de gases tóxicos e altamente inflamáveis no ambiente.");
+            break;
+        case "querosene_+_soda_caustica":
+            mostrarResposta("perigo", "Perigo: Reação Corrosiva e Degradação", "A soda cáustica reage de forma destrutiva com os hidrocarbonetos do querosene. Além de inutilizar as duas propriedades, a reação pode corroer embalagens plásticas rapidamente, causando vazamentos perigosos.");
+            break;
+
         // --- CATEGORIA: ATENÇÃO / INFLAMABILIDADE (AMARELO) ---
         case "bicarbonato_+_vinagre":
         case "bicarbonato_+_limpador_aluminio":
@@ -78,7 +85,12 @@ function calcularMistura() {
         case "alcool_+_querosene":
         case "alcool_isopropilico_+_querosene":
         case "acetona_+_querosene":
-            mostrarResposta("atencao", "Atenção: Mistura altamente inflamável", "Não gera gases tóxicos inéditos, mas a união de solventes orgânicos cria uma solução inflamável. Os vapores aumentam o risco de incêndios perto de calor.");
+            mostrarResposta("atencao", "Atenção: Mistura extremamente inflamável", "A união de múltiplos solventes orgânicos cria uma solução com altíssimo risco de incêndio. Os vapores acumulados podem se queimar com qualquer faísca ou calor no ambiente.");
+            break;
+        case "desengordurante_+_querosene":
+        case "detergente_+_querosene":
+        case "querosene_+_sabao_po":
+            mostrarResposta("atencao", "Atenção: Inalação Nociva e Risco de Pele", "Embora não causem explosão imediata, misturar querosene com sabão ou detergente facilita a quebra das barreiras protetoras da pele, causando dermatite grave. Além disso, agitar essa mistura espalha gotículas de querosene no ar, perigosas para o pulmão.");
             break;
 
         // --- CATEGORIA: SEGURO (VERDE) ---
@@ -96,7 +108,6 @@ function calcularMistura() {
         case "desengordurante_+_detergente":
         case "detergente_+_sabao_po":
         case "detergente_+_limpador_aluminio":
-        case "detergente_+_querosene":
             mostrarResposta("seguro", "Mistura segura", "O detergente neutro atua apenas como um estabilizador. Ele se mistura bem com ácidos, bases ou solventes sem provocar reações perigosas.");
             break;
         case "desengordurante_+_sabao_po":
@@ -115,12 +126,10 @@ function mostrarResposta(tipo, textoTitulo, textoDescricao) {
     const titulo = document.getElementById('statusTitulo');
     const descricao = document.getElementById('statusDescricao');
 
-    // Altera a interface visual (CSS)
     quadro.className = `resultado-box ${tipo}`;
     titulo.innerText = tipo === "seguro" ? "✓ " + textoTitulo : textoTitulo;
     descricao.innerText = textoDescricao;
 
-    // Dispara a voz: Fala o título e explica o motivo técnico
     const textoParaFalar = `${textoTitulo}. Motivo: ${textoDescricao}`;
     falarTexto(textoParaFalar);
 }
