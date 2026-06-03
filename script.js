@@ -1,27 +1,37 @@
-// --- SISTEMA TÉCNICO E BANCO DE DADOS MOLECULAR ---
+// --- SISTEMA TÉCNICO, BANCO DE DADOS E EXPORTAÇÃO ---
 
 let textoUltimoAlerta = "";
+let laudoAtual = ""; 
+let historicoTestes = []; // Guarda os dados para exportar o TXT
 
-// BANCO DE DADOS CIENTÍFICO (Nomes e Fórmulas)
+// BANCO DE DADOS (Agora com pH)
 const bancoQuimico = {
-    "agua_sanitaria": { nome: "Hipoclorito de Sódio", formula: "NaClO" },
-    "vinagre": { nome: "Ácido Acético", formula: "CH₃COOH" },
-    "amonia": { nome: "Hidróxido de Amônio", formula: "NH₄OH" },
-    "alcool": { nome: "Etanol", formula: "C₂H₅OH" },
-    "detergente": { nome: "Tensoativos Aniônicos", formula: "Mistura Sintética Neutra" },
-    "agua_oxigenada": { nome: "Peróxido de Hidrogênio", formula: "H₂O₂" },
-    "bicarbonato": { nome: "Bicarbonato de Sódio", formula: "NaHCO₃" },
-    "desinfetante_pinho": { nome: "Óleos de Pinho / Fenóis", formula: "Compostos Aromáticos" },
-    "soda_caustica": { nome: "Hidróxido de Sódio", formula: "NaOH" },
-    "sabao_po": { nome: "Alquilbenzeno Sulfonato de Sódio", formula: "Mistura Alcalina" },
-    "removedor_ferrugem": { nome: "Ácido Oxálico / Fosfórico", formula: "H₂C₂O₄ / H₃PO₄" },
-    "acetona": { nome: "Propanona", formula: "C₃H₆O" },
-    "desengordurante": { nome: "Solventes + Alcalinizantes", formula: "Mistura Solúvel" },
-    "limpador_aluminio": { nome: "Ácido Sulfúrico / Fluorídrico", formula: "H₂SO₄ / HF" },
-    "querosene": { nome: "Hidrocarbonetos Alifáticos", formula: "Mistura (CnH2n+2)" },
-    "alcool_isopropilico": { nome: "Isopropanol", formula: "C₃H₈O" }
+    "agua_sanitaria": { nome: "Hipoclorito de Sódio", formula: "NaClO", classe: "Oxidante Forte", ph: 12.5 },
+    "vinagre": { nome: "Ácido Acético", formula: "CH₃COOH", classe: "Ácido Fraco", ph: 2.5 },
+    "amonia": { nome: "Hidróxido de Amônio", formula: "NH₄OH", classe: "Base", ph: 11.5 },
+    "alcool": { nome: "Etanol", formula: "C₂H₅OH", classe: "Solvente Orgânico", ph: 7.0 },
+    "detergente": { nome: "Tensoativos Aniônicos", formula: "Mistura Sintética", classe: "Agente Neutro", ph: 7.0 },
+    "agua_oxigenada": { nome: "Peróxido de Hidrogênio", formula: "H₂O₂", classe: "Agente Oxidante", ph: 4.5 },
+    "bicarbonato": { nome: "Bicarbonato de Sódio", formula: "NaHCO₃", classe: "Sal Alcalino", ph: 8.3 },
+    "desinfetante_pinho": { nome: "Óleos de Pinho", formula: "Compostos Aromáticos", classe: "Desinfetante", ph: 6.0 },
+    "soda_caustica": { nome: "Hidróxido de Sódio", formula: "NaOH", classe: "Base Forte", ph: 14.0 },
+    "sabao_po": { nome: "Alquilbenzeno Sulfonato", formula: "Mistura Alcalina", classe: "Detergente Alcalino", ph: 10.0 },
+    "removedor_ferrugem": { nome: "Ácido Oxálico", formula: "H₂C₂O₄", classe: "Ácido Forte", ph: 1.5 },
+    "acetona": { nome: "Propanona", formula: "C₃H₆O", classe: "Solvente Volátil", ph: 7.0 },
+    "desengordurante": { nome: "Solventes + Alcalinizantes", formula: "Mistura Solúvel", classe: "Desengraxante", ph: 11.0 },
+    "limpador_aluminio": { nome: "Ácido Sulfúrico", formula: "H₂SO₄", classe: "Ácido Corrosivo", ph: 1.0 },
+    "querosene": { nome: "Hidrocarbonetos Alifáticos", formula: "CnH2n+2", classe: "Solvente", ph: 7.0 },
+    "alcool_isopropilico": { nome: "Isopropanol", formula: "C₃H₈O", classe: "Solvente Orgânico", ph: 7.0 }
 };
 
+// Define a cor da etiqueta de pH
+function classificarPH(valor) {
+    if (valor < 6) return "ph-acido";
+    if (valor > 8) return "ph-alcalino";
+    return "ph-neutro";
+}
+
+// Configuração do Sintetizador de Voz
 function falarTexto(mensagem) {
     window.speechSynthesis.cancel();
     const falar = new SpeechSynthesisUtterance(mensagem);
@@ -40,205 +50,173 @@ function calcularMistura() {
     const pA = elA.value;
     const pB = elB.value;
 
-    if (!pA || !pB) {
-        resetarSimulador();
-        return;
-    }
+    if (!pA || !pB) { resetarSimulador(); return; }
 
     const nomeA = elA.options[elA.selectedIndex].text;
     const nomeB = elB.options[elB.selectedIndex].text;
 
-    // Busca os dados científicos
-    const dadosA = `${bancoQuimico[pA].nome} (${bancoQuimico[pA].formula})`;
-    const dadosB = `${bancoQuimico[pB].nome} (${bancoQuimico[pB].formula})`;
+    const dadosA = { 
+        nomeForm: `${bancoQuimico[pA].nome} (${bancoQuimico[pA].formula})`, 
+        classe: bancoQuimico[pA].classe, 
+        ph: bancoQuimico[pA].ph,
+        classePh: classificarPH(bancoQuimico[pA].ph)
+    };
+    
+    const dadosB = { 
+        nomeForm: `${bancoQuimico[pB].nome} (${bancoQuimico[pB].formula})`, 
+        classe: bancoQuimico[pB].classe, 
+        ph: bancoQuimico[pB].ph,
+        classePh: classificarPH(bancoQuimico[pB].ph)
+    };
 
     if (pA === pB) {
-        const tit = "Mistura Estável";
-        const desc = "A união de recipientes do mesmo composto químico não altera as propriedades moleculares primárias, expandindo unicamente o volume total disponível.";
-        atualizarInterface("seguro", "✓", tit, desc, ["Luvas de Proteção"], dadosA, dadosB);
-        adicionarAoHistorico(nomeA, nomeB, "seguro");
-        acionarNarracao(tit, desc);
+        const tit = "Mistura Estável (Mesmo Produto)";
+        const desc = "A união de recipientes do mesmo composto não altera as propriedades moleculares primárias.";
+        atualizarInterface("seguro", "✓", tit, desc, ["Luvas de Proteção"], dadosA, dadosB, "", "Nenhum impacto biológico adverso além dos já previstos no rótulo.");
+        adicionarAoHistorico(nomeA, nomeB, "seguro", tit);
+        prepararTexto(tit, desc);
         return;
     }
 
     const combinacao = [pA, pB].sort().join('_+_');
-    let tipo = "seguro", icone = "✓", titulo = "", descricao = "", epis = [];
+    let tipo = "seguro", icone = "✓", titulo = "", descricao = "", epis = [], acao = "", sintomas = "";
 
     switch(combinacao) {
         case "agua_sanitaria_+_querosene":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo Crítico: Oxidação de Hidrocarbonetos";
-            descricao = "A água sanitária reage de forma agressiva tentando oxidar o querosene. Esse processo gera energia térmica indesejada e libera vapores químicos pesados altamente tóxicos para o sistema respiratório e nervoso central.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas", "Máscara de Carvão Ativado"];
-            break;
-        case "agua_sanitaria_+_vinagre":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo Crítico: Liberação de Gás Cloro";
-            descricao = "A decomposição do hipoclorito de sódio em meio ácido libera o Gás Cloro. Este gás é severamente asfixiante, corrosivo e causa danos graves e imediatos aos tecidos do trato respiratório superior.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas", "Máscara Respiratória"];
-            break;
         case "agua_sanitaria_+_limpador_aluminio":
         case "agua_sanitaria_+_removedor_ferrugem":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo Crítico: Emissão Violenta de Cloro Gasoso";
-            descricao = "Limpadores de metal e antiferrugem contêm altas concentrações de ácidos fortes industriais. O contato com o cloro da água sanitária gera uma reação rápida que expele gases altamente corrosivos.";
-            epis = ["Óculos de Proteção", "Luvas de Borracha Longas", "Avental Impermeável"];
-            break;
         case "agua_sanitaria_+_amonia":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo Crítico: Síntese de Cloraminas";
-            descricao = "A reação produz vapores irritantes chamados cloraminas. A inalação acidental provoca forte lacrimejamento, espasmos respiratórios severos e alto risco latente de edema pulmonar.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas", "Máscara Filtrante"];
+        case "agua_sanitaria_+_vinagre":
+            tipo = "perigo"; icone = "☣️";
+            titulo = "Perigo Crítico: Gás Tóxico";
+            descricao = "Esta combinação quebra a estabilidade das moléculas, liberando nuvens de gases pesados que atacam as mucosas.";
+            sintomas = "Tosse severa, lacrimejamento imediato, sensação de asfixia e risco de edema pulmonar agudo (líquido no pulmão).";
+            epis = ["Máscara Respiratória", "Óculos de Proteção", "Luvas Nitrílicas"];
+            acao = "Evacue o local imediatamente. Procure ar fresco.";
             break;
-        case "agua_sanitaria_+_alcool":
-        case "acetona_+_agua_sanitaria":
-        case "agua_sanitaria_+_alcool_isopropilico":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Reação Halofórmica (Clorofórmio)";
-            descricao = "A combinação de cloro ativo com solventes orgânicos gera vapores de clorofórmio. Em locais com pouca circulação de ar, a inalação deprime o sistema nervoso central, causando náuseas, tonturas e desmaios.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas"];
-            break;
+
         case "agua_oxigenada_+_vinagre":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Formação de Ácido Peracético";
-            descricao = "A mistura estabelece um equilíbrio corrosivo que sintetiza o ácido peracético. Seus vapores são voláteis e causam fortes queimaduras químicas nas mucosas e na pele.";
-            epis = ["Óculos de Proteção", "Luvas de Látex"];
-            break;
-        case "agua_sanitaria_+_desinfetante_pinho":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Subprodutos Organoclorados";
-            descricao = "Os compostos fenólicos do desinfetante de pinho reagem com o hipoclorito, gerando subprodutos irritantes e nocivos à saúde sistêmica se expostos repetidamente.";
-            epis = ["Óculos de Proteção", "Luvas de Borracha"];
-            break;
         case "limpador_aluminio_+_soda_caustica":
         case "removedor_ferrugem_+_soda_caustica":
         case "soda_caustica_+_vinagre":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Reação Exotérmica Violenta";
-            descricao = "A neutralização rápida entre um ácido concentrado e uma base forte libera calor imediato. O líquido pode entrar em ebulição instantânea, projetando respingos extremamente corrosivos.";
+            tipo = "perigo"; icone = "🌋";
+            titulo = "Perigo: Reação Exotérmica / Corrosão";
+            descricao = "Misturar ácidos com bases fortes gera calor instantâneo (fervura) e cria soluções extremamente corrosivas.";
+            sintomas = "Queimaduras químicas de 2º ou 3º grau na pele, necrose de tecido e cegueira permanente se houver contato ocular.";
             epis = ["Protetor Facial", "Luvas de Borracha Grossas", "Avental de PVC"];
+            acao = "Se respingar, lave a pele com água corrente por 15 a 20 minutos ininterruptos.";
             break;
-        case "limpador_aluminio_+_querosene":
-        case "querosene_+_removedor_ferrugem":
-        case "querosene_+_vinagre":
+
+        case "acetona_+_agua_sanitaria":
+        case "agua_sanitaria_+_alcool":
+        case "agua_sanitaria_+_alcool_isopropilico":
             tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Instabilidade e Emissão de Vapores";
-            descricao = "Substâncias ácidas quebram a estabilidade dos compostos do querosene, acelerando perigosamente a liberação de gases voláteis tóxicos e inflamáveis na atmosfera local.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas", "Máscara de Carvão Ativado"];
-            break;
-        case "querosene_+_soda_caustica":
-            tipo = "perigo"; icone = "🛑";
-            titulo = "Perigo: Degradação Estrutural Corrosiva";
-            descricao = "A alcalinidade extrema da soda cáustica ataca quimicamente as cadeias do querosene, inutilizando ambos e gerando potencial para fragilizar embalagens plásticas frágeis.";
-            epis = ["Óculos de Proteção", "Luvas Nitrílicas"];
+            titulo = "Perigo: Clorofórmio / Halofórmio";
+            descricao = "O cloro ativo ataca o solvente e cria vapores que deprimem o sistema nervoso central.";
+            sintomas = "Tontura progressiva, náuseas, confusão mental, síncope (desmaio) e depressão respiratória.";
+            epis = ["Óculos de Proteção", "Luvas Nitrílicas", "Máscara de Carvão"];
+            acao = "Ao primeiro sinal de enjoo, saia do recinto.";
             break;
 
         case "bicarbonato_+_vinagre":
         case "bicarbonato_+_limpador_aluminio":
         case "bicarbonato_+_removedor_ferrugem":
             tipo = "atencao"; icone = "⚠️";
-            titulo = "Atenção: Efervescência de Dióxido de Carbono";
-            descricao = "Ocorre uma neutralização com liberação acelerada de gás carbônico. Em recipientes hermeticamente vedados, a pressão física pode estourar o frasco. Os reagentes se anulam mutuamente.";
+            titulo = "Atenção: Pressão por Gás";
+            descricao = "Neutralização rápida com liberação de gás carbônico (CO2). Pode causar explosão física de frascos fechados.";
+            sintomas = "Risco de lesões físicas causadas por estilhaços de embalagens rompidas pela pressão.";
             epis = ["Luvas de Proteção"];
+            acao = "Nunca feche o recipiente enquanto estiver borbulhando.";
             break;
-        case "bicarbonato_+_soda_caustica":
-            tipo = "atencao"; icone = "⚠️";
-            titulo = "Atenção: Saturação Alcalina";
-            descricao = "A combinação de dois agentes básicos quebra o pH ideal do processo, inibindo o poder específico de saponificação necessário para a soda quebrar gorduras pesadas.";
-            epis = ["Luvas de Borracha"];
-            break;
-        case "agua_sanitaria_+_sabao_po":
-            tipo = "atencao"; icone = "⚠️";
-            titulo = "Atenção: Inativação de Agentes Ativos";
-            descricao = "O forte poder oxidante do cloro destrói as propriedades ativas dos tensoativos e enzimas de limpeza do sabão em pó, diminuindo o rendimento final da lavagem.";
-            epis = ["Luvas de Proteção"];
-            break;
+
         case "acetona_+_alcool":
-        case "acetona_+_alcool_isopropilico":
+        case "acetona_+_querosene":
         case "alcool_+_querosene":
         case "alcool_isopropilico_+_querosene":
-        case "acetona_+_querosene":
-            tipo = "atencao"; icone = "⚠️";
-            titulo = "Atenção: Fluido Altamente Inflamável";
-            descricao = "Combinar diferentes solventes orgânicos reduz o ponto de fulgor global do fluido. Isso eleva significativamente o risco de ignição gasosa em presença de faíscas ou calor.";
-            epis = ["Luvas Nitrílicas", "Ambiente Ventilado"];
-            break;
-        case "desengordurante_+_querosene":
-        case "detergente_+_querosene":
-        case "querosene_+_sabao_po":
-            tipo = "atencao"; icone = "⚠️";
-            titulo = "Atenção: Dispersão Atmosférica Nociva";
-            descricao = "Os detergentes quebram o querosene em micropartículas. Isso facilita a remoção da barreira lipídica da pele (causando dermatite) e suspende pequenas gotículas de solvente nocivas no ar.";
-            epis = ["Luvas Nitrílicas"];
+            tipo = "atencao"; icone = "🔥";
+            titulo = "Atenção: Alta Inflamabilidade";
+            descricao = "Misturar solventes evapora rápido e o gás invisível pode inflamar com uma faísca simples.";
+            sintomas = "Risco severo de queimaduras térmicas por explosão ambiental. Irritação leve nas vias aéreas.";
+            epis = ["Luvas Nitrílicas", "Ambiente Super Ventilado"];
+            acao = "Mantenha rigorosamente longe de fontes de ignição (calor, isqueiros, tomadas).";
             break;
 
         case "alcool_+_vinagre":
-        case "alcool_isopropilico_+_vinagre":
-        case "desengordurante_+_vinagre":
-            titulo = "Combinação Segura";
-            descricao = "Essa mistura é estável e amplamente utilizada para quebrar finas películas de gordura doméstica e conferir brilho estático em superfícies vitrificadas.";
-            epis = ["Luvas de Proteção"];
-            break;
         case "agua_sanitaria_+_detergente":
-        case "alcool_+_detergente":
-        case "alcool_isopropilico_+_detergente":
-        case "amonia_+_detergente":
-        case "detergente_+_vinagre":
-        case "agua_oxigenada_+_detergente":
-        case "desengordurante_+_detergente":
-        case "detergente_+_sabao_po":
-        case "detergente_+_limpador_aluminio":
-            titulo = "Combinação Quimicamente Estável";
-            descricao = "O detergente líquido atua como um surfactante molecularmente neutro. Ele estabiliza as tensões sem reagir ou gerar gases tóxicos com ácidos ou bases domésticas.";
-            epis = ["Luvas de Proteção"];
-            break;
         case "desengordurante_+_sabao_po":
-        case "alcool_+_desengordurante":
-        case "alcool_isopropilico_+_desengordurante":
-            titulo = "Combinação Estável";
-            descricao = "Otimiza a desagregação de gorduras saturadas sem originar subprodutos de risco. Recomenda-se o uso de luvas básicas para prevenir o ressecamento da epiderme.";
-            epis = ["Luvas de Proteção"];
+        case "detergente_+_vinagre":
+            titulo = "Combinação Segura";
+            descricao = "As moléculas são compatíveis. O uso é seguro para limpezas rotineiras.";
+            sintomas = "Nenhum agravo à saúde, exceto possível ressecamento da epiderme por uso prolongado.";
+            epis = ["Luvas de Látex Básicas"];
             break;
+
         default:
-            titulo = "Compatibilidade Detectada";
-            descricao = "Nenhum histórico de colisão molecular ou perigo reportado para esta combinação específica. Mantenha os procedimentos padrão de ventilação do recinto.";
+            titulo = "Compatibilidade Genérica";
+            descricao = "Nenhum histórico de colisão molecular perigosa detectado no sistema.";
+            sintomas = "Efeitos biológicos limitados aos já descritos nos rótulos individuais dos produtos.";
             epis = ["Luvas de Proteção"];
     }
 
-    atualizarInterface(tipo, icone, titulo, descricao, epis, dadosA, dadosB);
-    adicionarAoHistorico(nomeA, nomeB, tipo);
-    acionarNarracao(titulo, descricao);
+    atualizarInterface(tipo, icone, titulo, descricao, epis, dadosA, dadosB, acao, sintomas);
+    adicionarAoHistorico(nomeA, nomeB, tipo, titulo);
+    prepararTexto(titulo, descricao);
+    
+    laudoAtual = `🧪 ChemShield Pro - Relatório de Mistura\n\nReagentes:\n1. ${nomeA} [pH: ${dadosA.ph}]\n2. ${nomeB} [pH: ${dadosB.ph}]\n\n⚠️ Status: ${titulo}\n🔬 Análise: ${descricao}\n🦠 Sintomas: ${sintomas}\n\n🛡️ EPIs Necessários: ${epis.join(", ")}`;
 }
 
-function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA = "", dadoB = "") {
+function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA = null, dadoB = null, acao = "", sintomas = "") {
     const quadro = document.getElementById('quadroResultado');
-    const elementoIcone = document.getElementById('resultadoIcone');
-    const elementoTitulo = document.getElementById('statusTitulo');
-    const elementoDescricao = document.getElementById('statusDescricao');
-    const blocoEpis = document.getElementById('blocoEpis');
-    const listaEpis = document.getElementById('listaEpis');
-    
-    // Controles e Dados Científicos
-    document.getElementById('btnRepetir').style.display = classeEstilo !== "estado-espera" ? "inline-block" : "none";
-    document.getElementById('btnRelatorio').style.display = classeEstilo !== "estado-espera" ? "inline-block" : "none";
-    
     const divDados = document.getElementById('dadosQuimicos');
+    const divAcao = document.getElementById('alertaAcao');
+    const divSintomas = document.getElementById('blocoSintomas');
+    
+    const ativos = classeEstilo !== "estado-espera";
+    document.getElementById('btnOuvir').style.display = ativos ? "inline-block" : "none";
+    document.getElementById('btnCopiar').style.display = ativos ? "inline-block" : "none";
+    
     if (dadoA && dadoB) {
         divDados.style.display = "flex";
-        document.getElementById('nomeCientificoA').innerText = dadoA;
-        document.getElementById('nomeCientificoB').innerText = dadoB;
+        document.getElementById('nomeCientificoA').innerText = dadoA.nomeForm;
+        document.getElementById('classeA').innerText = dadoA.classe;
+        
+        let elPhA = document.getElementById('phA');
+        elPhA.innerText = `pH ~${dadoA.ph}`;
+        elPhA.className = `badge-ph ${dadoA.classePh}`;
+
+        document.getElementById('nomeCientificoB').innerText = dadoB.nomeForm;
+        document.getElementById('classeB').innerText = dadoB.classe;
+        
+        let elPhB = document.getElementById('phB');
+        elPhB.innerText = `pH ~${dadoB.ph}`;
+        elPhB.className = `badge-ph ${dadoB.classePh}`;
     } else {
         divDados.style.display = "none";
     }
 
-    quadro.className = `resultado-card ${classeEstilo}`;
-    elementoIcone.innerText = icone;
-    elementoTitulo.innerText = titulo;
-    elementoDescricao.innerText = descricao;
+    if (sintomas !== "") {
+        divSintomas.style.display = "block";
+        document.getElementById('textoSintomas').innerText = sintomas;
+    } else {
+        divSintomas.style.display = "none";
+    }
 
+    if (acao !== "") {
+        divAcao.style.display = "block";
+        document.getElementById('textoAcao').innerText = acao;
+    } else {
+        divAcao.style.display = "none";
+    }
+
+    quadro.className = `resultado-card ${classeEstilo}`;
+    document.getElementById('resultadoIcone').innerText = icone;
+    document.getElementById('statusTitulo').innerText = titulo;
+    document.getElementById('statusDescricao').innerText = descricao;
+
+    const listaEpis = document.getElementById('listaEpis');
     listaEpis.innerHTML = "";
     if (epis.length > 0) {
-        blocoEpis.style.display = "block";
+        document.getElementById('blocoEpis').style.display = "block";
         epis.forEach(epi => {
             const span = document.createElement('span');
             span.className = "epi-item";
@@ -246,31 +224,71 @@ function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA 
             listaEpis.appendChild(span);
         });
     } else {
-        blocoEpis.style.display = "none";
+        document.getElementById('blocoEpis').style.display = "none";
     }
 }
 
-function acionarNarracao(titulo, descricao) {
-    textoUltimoAlerta = `${titulo}. ... Análise técnica: ... ${descricao}`;
-    falarTexto(textoUltimoAlerta);
+// O áudio é PREPARADO aqui, mas NÃO toca sozinho
+function prepararTexto(titulo, descricao) {
+    textoUltimoAlerta = `${titulo}. ... Análise técnica do sistema: ... ${descricao}`;
 }
 
-function repetirAudio() {
+// O áudio SÓ toca quando a pessoa clica no botão "🔊 Ouvir"
+function lerAnalise() {
     if (textoUltimoAlerta) { falarTexto(textoUltimoAlerta); }
+}
+
+function copiarResumo() {
+    if(laudoAtual) {
+        navigator.clipboard.writeText(laudoAtual).then(() => {
+            alert("✅ Laudo químico copiado com sucesso!");
+        });
+    }
+}
+
+// Nova Função: Exportar os testes para arquivo de texto
+function exportarDados() {
+    if (historicoTestes.length === 0) {
+        alert("⚠️ Faça pelo menos uma simulação antes de exportar o diário.");
+        return;
+    }
+    
+    let conteudo = "--- DIÁRIO DE TESTES: CHEMSHIELD PRO ---\n\n";
+    historicoTestes.forEach((teste, index) => {
+        conteudo += `Teste #${index + 1}\n`;
+        conteudo += `Reagentes: ${teste.p1} + ${teste.p2}\n`;
+        conteudo += `Resultado: ${teste.resultado}\n`;
+        conteudo += `Data/Hora: ${teste.hora}\n\n`;
+    });
+
+    const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Diario_ChemShieldPro.txt";
+    link.click();
+    URL.revokeObjectURL(url);
 }
 
 function resetarSimulador() {
     document.getElementById('produtoA').value = "";
     document.getElementById('produtoB').value = "";
     textoUltimoAlerta = "";
+    laudoAtual = "";
     window.speechSynthesis.cancel();
     atualizarInterface("estado-espera", "🔬", "Aguardando Parâmetros", "Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.", []);
 }
 
-function adicionarAoHistorico(prod1, prod2, tipo) {
+function adicionarAoHistorico(prod1, prod2, tipo, titulo) {
+    // Salva na memória para o botão de download
+    const agora = new Date().toLocaleTimeString();
+    historicoTestes.push({ p1: prod1, p2: prod2, resultado: titulo, hora: agora });
+
+    // Atualiza a tela (Visual)
     const lista = document.getElementById('listaHistorico');
     const vazio = lista.querySelector('.historico-vazio');
     if (vazio) vazio.remove();
+    
     const item = document.createElement('div');
     item.className = `historico-item p-${tipo}`;
     item.innerHTML = `<strong>${prod1}</strong> + <strong>${prod2}</strong>`;
