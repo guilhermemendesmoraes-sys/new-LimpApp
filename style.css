@@ -1,5 +1,3 @@
-/* --- ESTILIZAÇÃO DASHBOARD AVANÇADO E MODO IMPRESSÃO (CSS) --- */
-
 :root {
     --bg-global: #0b0f19;
     --bg-card: #151f32;
@@ -57,7 +55,6 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
 
 .resultado-card { border-radius: 20px; padding: 30px; border: 1px solid var(--borda-padrao); background-color: var(--bg-input); transition: all 0.3s ease; position: relative; overflow: hidden; }
 
-/* Nova Barra de Risco Visual */
 .barra-risco-container { width: 100%; height: 6px; background-color: var(--borda-padrao); position: absolute; top: 0; left: 0; }
 .barra-risco-preenchimento { height: 100%; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease; }
 
@@ -66,14 +63,13 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
 .resultado-icone { font-size: 28px; }
 .status-titulo { font-size: 22px; font-weight: 700; }
 
-/* Novos Dados Químicos */
 .dados-quimicos { background-color: var(--bg-global); border: 1px dashed var(--borda-padrao); padding: 12px; border-radius: 10px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
-.dado-item { font-size: 13.5px; font-family: monospace; color: #94a3b8; }
-.dado-label { font-weight: bold; color: var(--texto-secundario); font-family: 'Segoe UI', sans-serif; }
+.dado-item { font-size: 13.5px; font-family: monospace; color: #94a3b8; display: flex; align-items: center; flex-wrap: wrap; }
+.dado-label { font-weight: bold; color: var(--texto-secundario); font-family: 'Segoe UI', sans-serif; margin-right: 5px; }
 
 .status-descricao { font-size: 15px; line-height: 1.6; color: #94a3b8; }
 
-.botoes-acoes { display: flex; gap: 8px; }
+.botoes-acoes { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn-acao { background-color: var(--borda-padrao); border: 1px solid transparent; color: var(--texto-principal); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
 .btn-acao:hover { background-color: #2e4463; }
 .btn-danger { background-color: #3f1e1e; color: #f87171; }
@@ -86,7 +82,6 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
 .epi-lista { display: flex; gap: 10px; flex-wrap: wrap; }
 .epi-item { background-color: var(--bg-global); border: 1px solid var(--borda-padrao); padding: 8px 14px; border-radius: 8px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
 
-/* Estados Dinâmicos */
 .resultado-card.seguro { border-color: var(--cor-seguro); background-color: var(--bg-seguro); }
 .resultado-card.seguro .status-titulo { color: var(--cor-seguro); }
 .resultado-card.seguro .barra-risco-preenchimento { width: 15%; background-color: var(--cor-seguro); }
@@ -103,7 +98,7 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
 .info-card { background-color: var(--bg-input); border: 1px solid var(--borda-padrao); border-radius: 20px; padding: 22px; }
 .info-card h3 { font-size: 16px; margin-bottom: 12px; font-weight: 600; }
 .info-card p, .info-card ul { font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px; }
-.tel-item { flex: 1; background-color: var(--bg-global); border: 1px solid var(--borda-padrao); padding: 8px; border-radius: 8px; font-size: 12px; text-align: center; }
+.tel-item { flex: 1; background-color: var(--bg-global); border: 1px solid var(--borda-padrao); padding: 8px; border-radius: 8px; font-size: 12px; text-align: center; margin-top: 5px; }
 
 .lista-historico { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
 .historico-item { background-color: var(--bg-global); border-left: 3px solid var(--borda-padrao); padding: 8px 12px; border-radius: 4px; font-size: 12.5px; }
@@ -113,9 +108,23 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
 
 .app-footer { text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--borda-padrao); font-size: 12px; color: var(--texto-secundario); }
 
-@keyframes sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* --- NOVAS REGRAS E COMPONENTES AVANÇADOS --- */
+.badge-quimico { background-color: #1e293b; color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; border: 1px solid #334155; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-ph { padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; font-weight: bold; color: #fff; }
 
-/* === MAGIA DA FEIRA DE CIÊNCIAS: MODO IMPRESSÃO PDF === */
+.ph-acido { background-color: #ef4444; border: 1px solid #7f1d1d; }
+.ph-neutro { background-color: #10b981; border: 1px solid #064e3b; }
+.ph-alcalino { background-color: #3b82f6; border: 1px solid #1e3a8a; }
+
+.alerta-acao { margin-top: 15px; padding: 12px; background-color: rgba(248, 113, 113, 0.1); border-left: 4px solid var(--cor-perigo); border-radius: 4px 8px 8px 4px; font-size: 14px; color: #fecdd3; }
+.alerta-acao strong { color: var(--cor-perigo); }
+
+.sintomas-container { margin-top: 15px; padding: 10px 12px; background-color: rgba(99, 102, 241, 0.1); border-left: 4px solid #6366f1; border-radius: 4px 8px 8px 4px; font-size: 14px; color: #c7d2fe; }
+.sintomas-container strong { color: #818cf8; }
+
+@keyframes sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes piscarAlerta { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
 @media print {
     body { background-color: white; color: black; padding: 0; }
     .nao-imprimir { display: none !important; }
@@ -123,64 +132,9 @@ select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.
     .dashboard-grid { grid-template-columns: 1fr; display: block; }
     .resultado-card { border: 2px solid #000; background-color: white; break-inside: avoid; }
     .dados-quimicos { border-color: #000; color: #000; }
-    .dado-item, .status-descricao, .status-titulo { color: #000 !important; }
+    .dado-item, .status-descricao, .status-titulo, .alerta-acao, .sintomas-container { color: #000 !important; }
+    .badge-ph { border: 1px solid #000; color: #000; }
 }
 
 @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .painel-selecao { flex-direction: column; } }
-/* Adicione no final do seu style.css atual */
-
-.badge-quimico {
-    background-color: #1e293b;
-    color: #94a3b8;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-left: 8px;
-    border: 1px solid #334155;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.alerta-acao {
-    margin-top: 15px;
-    padding: 12px;
-    background-color: rgba(248, 113, 113, 0.1);
-    border-left: 4px solid var(--cor-perigo);
-    border-radius: 4px 8px 8px 4px;
-    font-size: 14px;
-    color: #fecdd3;
-}
-
-.alerta-acao strong {
-    color: var(--cor-perigo);
-}
-/* --- NOVAS REGRAS PARA PH, SINTOMAS E HISTÓRICO --- */
-
-.badge-ph {
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-left: 8px;
-    font-weight: bold;
-    color: #fff;
-}
-
-/* Cores da Escala de pH */
-.ph-acido { background-color: #ef4444; border: 1px solid #7f1d1d; }    /* Vermelho */
-.ph-neutro { background-color: #10b981; border: 1px solid #064e3b; }   /* Verde */
-.ph-alcalino { background-color: #3b82f6; border: 1px solid #1e3a8a; } /* Azul */
-
-.sintomas-container {
-    margin-top: 15px;
-    padding: 10px 12px;
-    background-color: rgba(99, 102, 241, 0.1);
-    border-left: 4px solid #6366f1;
-    border-radius: 4px 8px 8px 4px;
-    font-size: 14px;
-    color: #c7d2fe;
-}
-
-.sintomas-container strong {
-    color: #818cf8;
-}

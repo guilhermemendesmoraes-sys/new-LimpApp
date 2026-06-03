@@ -85,6 +85,7 @@
                         <div class="botoes-acoes nao-imprimir">
                             <button id="btnOuvir" class="btn-acao" onclick="lerAnalise()" title="Ouvir análise" style="display: none;">🔊 Ouvir</button>
                             <button id="btnCopiar" class="btn-acao" onclick="copiarResumo()" title="Copiar Laudo" style="display: none;">📋 Copiar</button>
+                            <button id="btnRelatorio" class="btn-acao btn-print" onclick="window.print()" title="Imprimir Laudo" style="display: none;">📄 Imprimir</button>
                             <button id="btnLimpar" class="btn-acao btn-danger" onclick="resetarSimulador()" title="Limpar seleção">🔄 Limpar</button>
                         </div>
                     </div>
@@ -105,7 +106,7 @@
                     </div>
 
                     <div id="blocoEpis" class="epi-container" style="display: none;">
-                        <h3>EPIs Recomendados para Manuseio Seguro:</h3>
+                        <h3>EPIs Recomendados:</h3>
                         <div class="epi-lista" id="listaEpis"></div>
                     </div>
                 </section>
@@ -119,6 +120,10 @@
                         <li><strong>Inalação:</strong> Vá para um local aberto imediatamente.</li>
                         <li><strong>Contato:</strong> Lave a pele/olhos por 15 min.</li>
                     </ul>
+                    <div class="telefones-uteis">
+                        <div class="tel-item"><strong>SAMU:</strong> 192</div>
+                        <div class="tel-item"><strong>CEATOX:</strong> 0800-0148110</div>
+                    </div>
                 </div>
 
                 <div class="info-card historico">
@@ -133,6 +138,10 @@
             </aside>
 
         </div>
+
+        <footer class="app-footer nao-imprimir">
+            <p>Desenvolvido estritamente para fins informativos e didáticos. O software não substitui as fichas técnicas oficiais.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>

@@ -1,10 +1,7 @@
-// --- SISTEMA TÉCNICO, BANCO DE DADOS E EXPORTAÇÃO ---
-
 let textoUltimoAlerta = "";
 let laudoAtual = ""; 
-let historicoTestes = []; // Guarda os dados para exportar o TXT
+let historicoTestes = [];
 
-// BANCO DE DADOS (Agora com pH)
 const bancoQuimico = {
     "agua_sanitaria": { nome: "Hipoclorito de Sódio", formula: "NaClO", classe: "Oxidante Forte", ph: 12.5 },
     "vinagre": { nome: "Ácido Acético", formula: "CH₃COOH", classe: "Ácido Fraco", ph: 2.5 },
@@ -24,14 +21,12 @@ const bancoQuimico = {
     "alcool_isopropilico": { nome: "Isopropanol", formula: "C₃H₈O", classe: "Solvente Orgânico", ph: 7.0 }
 };
 
-// Define a cor da etiqueta de pH
 function classificarPH(valor) {
     if (valor < 6) return "ph-acido";
     if (valor > 8) return "ph-alcalino";
     return "ph-neutro";
 }
 
-// Configuração do Sintetizador de Voz
 function falarTexto(mensagem) {
     window.speechSynthesis.cancel();
     const falar = new SpeechSynthesisUtterance(mensagem);
@@ -42,6 +37,7 @@ function falarTexto(mensagem) {
     falar.rate = 0.9;
     window.speechSynthesis.speak(falar);
 }
+
 window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 
 function calcularMistura() {
@@ -174,6 +170,7 @@ function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA 
     const ativos = classeEstilo !== "estado-espera";
     document.getElementById('btnOuvir').style.display = ativos ? "inline-block" : "none";
     document.getElementById('btnCopiar').style.display = ativos ? "inline-block" : "none";
+    document.getElementById('btnRelatorio').style.display = ativos ? "inline-block" : "none";
     
     if (dadoA && dadoB) {
         divDados.style.display = "flex";
@@ -228,12 +225,10 @@ function atualizarInterface(classeEstilo, icone, titulo, descricao, epis, dadoA 
     }
 }
 
-// O áudio é PREPARADO aqui, mas NÃO toca sozinho
 function prepararTexto(titulo, descricao) {
     textoUltimoAlerta = `${titulo}. ... Análise técnica do sistema: ... ${descricao}`;
 }
 
-// O áudio SÓ toca quando a pessoa clica no botão "🔊 Ouvir"
 function lerAnalise() {
     if (textoUltimoAlerta) { falarTexto(textoUltimoAlerta); }
 }
@@ -246,7 +241,6 @@ function copiarResumo() {
     }
 }
 
-// Nova Função: Exportar os testes para arquivo de texto
 function exportarDados() {
     if (historicoTestes.length === 0) {
         alert("⚠️ Faça pelo menos uma simulação antes de exportar o diário.");
@@ -280,11 +274,9 @@ function resetarSimulador() {
 }
 
 function adicionarAoHistorico(prod1, prod2, tipo, titulo) {
-    // Salva na memória para o botão de download
     const agora = new Date().toLocaleTimeString();
     historicoTestes.push({ p1: prod1, p2: prod2, resultado: titulo, hora: agora });
 
-    // Atualiza a tela (Visual)
     const lista = document.getElementById('listaHistorico');
     const vazio = lista.querySelector('.historico-vazio');
     if (vazio) vazio.remove();
