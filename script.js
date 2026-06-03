@@ -46,14 +46,12 @@ function calcularMistura() {
     const pA = elA.value;
     const pB = elB.value;
 
-    // Cenário 1: Nenhum selecionado
     if (!pA && !pB) { 
         atualizarInterface("estado-espera", "🔬", "Aguardando Parâmetros", "Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.", []);
         document.getElementById('dadosQuimicos').style.display = "none";
         return; 
     }
 
-    // Cenário 2: APENAS UM selecionado (NOVO: Dá o aviso na tela de que registrou)
     if (!pA || !pB) {
         let nomeSelecionado = pA ? elA.options[elA.selectedIndex].text : elB.options[elB.selectedIndex].text;
         atualizarInterface("estado-espera", "⏳", "Aguardando 2º Produto", `Você selecionou: ${nomeSelecionado}. Agora escolha o outro componente químico para processar a análise.`, []);
@@ -61,7 +59,6 @@ function calcularMistura() {
         return;
     }
 
-    // Cenário 3: Os DOIS selecionados (Faz a análise química)
     const nomeA = elA.options[elA.selectedIndex].text;
     const nomeB = elB.options[elB.selectedIndex].text;
 
@@ -103,6 +100,15 @@ function calcularMistura() {
             sintomas = "Tosse severa, lacrimejamento imediato, sensação de asfixia e risco de edema pulmonar agudo (líquido no pulmão).";
             epis = ["Máscara Respiratória", "Óculos de Proteção", "Luvas Nitrílicas"];
             acao = "Evacue o local imediatamente. Procure ar fresco.";
+            break;
+
+        case "agua_sanitaria_+_sabao_po":
+            tipo = "perigo"; icone = "☣️";
+            titulo = "Perigo: Cloramina e Inativação";
+            descricao = "O hipoclorito reage com compostos do sabão em pó, anulando a limpeza de ambos e liberando gás cloramina tóxico.";
+            sintomas = "Ardência imediata nos olhos, nariz e garganta, tosse severa e risco de problemas respiratórios agudos.";
+            epis = ["Máscara Respiratória", "Ambiente Bem Ventilado"];
+            acao = "Não permaneça no ambiente fechado com a mistura. Abra janelas e portas.";
             break;
 
         case "agua_oxigenada_+_vinagre":
