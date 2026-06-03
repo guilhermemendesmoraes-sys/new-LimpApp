@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Segurança: Misturas de Limpeza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Simulador de Misturas Químicas</h1>
+        <p class="subtitulo">Descubra se a combinação de produtos de limpeza doméstica é segura ou perigosa.</p>
+
+        <div class="painel-selecao">
+            <div class="campo">
+                <label for="produtoA">1º Produto:</label>
+                <select id="produtoA" onchange="calcularMistura()">
+                    <option value="">Selecione um produto...</option>
+                    <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
+                    <option value="vinagre">Vinagre (Ácido)</option>
+                    <option value="amonia">Amoníaco (Amônia)</option>
+                    <option value="alcool">Álcool Etílico</option>
+                    <option value="detergente">Detergente Neutro</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="produtoB">2º Produto:</label>
+                <select id="produtoB" onchange="calcularMistura()">
+                    <option value="">Selecione um produto...</option>
+                    <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
+                    <option value="vinagre">Vinagre (Ácido)</option>
+                    <option value="amonia">Amoníaco (Amônia)</option>
+                    <option value="alcool">Álcool Etílico</option>
+                    <option value="detergente">Detergente Neutro</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="quadroResultado" class="resultado-box">
+            <div id="statusTitulo" class="status-titulo"></div>
+            <div id="statusDescricao" class="status-descricao"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
