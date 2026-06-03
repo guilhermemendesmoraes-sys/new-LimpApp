@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório Seguro: Simulador de Misturas Químicas</title>
+    <title>ChemShield Pro - Simulador de Segurança Química</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
         <header class="app-header">
-            <div class="logo-icon">⚠️</div>
-            <h1>Simulador de Segurança Química</h1>
-            <p class="subtitulo">Análise avançada de reações e riscos em misturas de limpeza doméstica e solventes.</p>
+            <div class="logo-wrapper">
+                <span class="logo-shield">🛡️</span>
+                <span class="logo-hazard">⚠️</span>
+            </div>
+            <h1>ChemShield <span class="gradient-text">Pro</span></h1>
+            <p class="subtitulo">Plataforma inteligente de simulação de compatibilidade química e mitigação de riscos residenciais.</p>
         </header>
 
-        <main class="app-content">
-            <section class="painel-selecao">
-                <div class="campo-selecao">
-                    <label for="produtoA">1º Componente</label>
-                    <div class="select-wrapper">
+        <div class="dashboard-grid">
+            
+            <div class="coluna-principal">
+                <section class="painel-selecao">
+                    <div class="campo-selecao">
+                        <label for="produtoA">1º Componente Alvo</label>
                         <select id="produtoA" onchange="calcularMistura()">
-                            <option value="">Selecione um produto...</option>
+                            <option value="">Selecione ou digite...</option>
                             <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
                             <option value="vinagre">Vinagre (Ácido Acético)</option>
                             <option value="amonia">Amoníaco (Amônia)</option>
@@ -40,15 +44,13 @@
                             <option value="alcool_isopropilico">Álcool Isopropílico</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="divisor-vs">X</div>
+                    <div class="divisor-vs">VS</div>
 
-                <div class="campo-selecao">
-                    <label for="produtoB">2º Componente</label>
-                    <div class="select-wrapper">
+                    <div class="campo-selecao">
+                        <label for="produtoB">2º Componente Alvo</label>
                         <select id="produtoB" onchange="calcularMistura()">
-                            <option value="">Selecione um produto...</option>
+                            <option value="">Selecione ou digite...</option>
                             <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
                             <option value="vinagre">Vinagre (Ácido Acético)</option>
                             <option value="amonia">Amoníaco (Amônia)</option>
@@ -67,20 +69,48 @@
                             <option value="alcool_isopropilico">Álcool Isopropílico</option>
                         </select>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section id="quadroResultado" class="resultado-card estado-espera">
-                <div class="resultado-header">
-                    <span id="resultadoIcone" class="resultado-icone">🔬</span>
-                    <h2 id="statusTitulo" class="status-titulo">Aguardando Seleção</h2>
+                <section id="quadroResultado" class="resultado-card estado-espera">
+                    <div class="resultado-header">
+                        <span id="resultadoIcone" class="resultado-icone">🔬</span>
+                        <h2 id="statusTitulo" class="status-titulo">Aguardando Parâmetros</h2>
+                    </div>
+                    <p id="statusDescricao" class="status-descricao">Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.</p>
+                    
+                    <div id="blocoEpis" class="epi-container" style="display: none;">
+                        <h3>EPIs Recomendados para Manuseio Seguro:</h3>
+                        <div class="epi-lista" id="listaEpis">
+                            </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="coluna-lateral">
+                <div class="info-card emergencia">
+                    <h3>🚨 Protocolo de Emergência</h3>
+                    <p>Em caso de acidentes ou inalação de gases provocados por misturas inadequadas:</p>
+                    <ul>
+                        <li><strong>Inalação:</strong> Vá imediatamente para um local aberto com ventilação natural.</li>
+                        <li><strong>Contato com a pele/olhos:</strong> Lave abundantemente com água corrente por 15 minutos.</li>
+                        <li><strong>Não improvise:</strong> Não tente neutralizar jogando outro produto (como jogar vinagre na soda).</li>
+                    </ul>
+                    <div class="telefones-uteis">
+                        <div class="tel-item"><strong>SAMU:</strong> 192</div>
+                        <div class="tel-item"><strong>CEATOX:</strong> 0800-0148110</div>
+                    </div>
                 </div>
-                <p id="statusDescricao" class="status-descricao">Escolha dois elementos acima para analisar a estabilidade e os riscos da mistura em tempo real.</p>
-            </section>
-        </main>
+
+                <div class="info-card diretriz">
+                    <h3>💡 Boas Práticas Domésticas</h3>
+                    <p>Mantenha sempre os produtos em suas embalagens originais com rótulos visíveis. A maioria dos acidentes graves ocorre ao transferir líquidos para garrafas de refrigerante ou ao misturar soluções buscando uma "limpeza milagrosa".</p>
+                </div>
+            </aside>
+
+        </div>
 
         <footer class="app-footer">
-            <p>Use este simulador apenas para fins educativos. Nunca misture produtos químicos na vida real.</p>
+            <p>Desenvolvido estritamente para fins informativos e didáticos. O software não substitui as fichas técnicas oficiais (FISPQ) dos fabricantes.</p>
         </footer>
     </div>
 
