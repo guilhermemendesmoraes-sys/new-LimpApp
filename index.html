@@ -25,7 +25,7 @@
                     <div class="campo-selecao">
                         <label for="produtoA">1º Componente Alvo</label>
                         <select id="produtoA" onchange="calcularMistura()">
-                            <option value="">Selecione ou digite...</option>
+                            <option value="">Selecione um produto...</option>
                             <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
                             <option value="vinagre">Vinagre (Ácido Acético)</option>
                             <option value="amonia">Amoníaco (Amônia)</option>
@@ -50,7 +50,7 @@
                     <div class="campo-selecao">
                         <label for="produtoB">2º Componente Alvo</label>
                         <select id="produtoB" onchange="calcularMistura()">
-                            <option value="">Selecione ou digite...</option>
+                            <option value="">Selecione um produto...</option>
                             <option value="agua_sanitaria">Água Sanitária (Cloro)</option>
                             <option value="vinagre">Vinagre (Ácido Acético)</option>
                             <option value="amonia">Amoníaco (Amônia)</option>
@@ -74,14 +74,19 @@
                 <section id="quadroResultado" class="resultado-card estado-espera">
                     <div class="resultado-header">
                         <span id="resultadoIcone" class="resultado-icone">🔬</span>
-                        <h2 id="statusTitulo" class="status-titulo">Aguardando Parâmetros</h2>
+                        <div class="titulo-wrapper">
+                            <h2 id="statusTitulo" class="status-titulo">Aguardando Parâmetros</h2>
+                        </div>
+                        <div class="botoes-acoes">
+                            <button id="btnRepetir" class="btn-acao" onclick="repetirAudio()" title="Ouvir novamente" style="display: none;">🔊 Repetir</button>
+                            <button id="btnLimpar" class="btn-acao btn-danger" onclick="resetarSimulador()" title="Limpar seleção">🔄 Limpar</button>
+                        </div>
                     </div>
                     <p id="statusDescricao" class="status-descricao">Insira os dois compostos químicos no painel acima para iniciar o mapeamento molecular de riscos e reações.</p>
                     
                     <div id="blocoEpis" class="epi-container" style="display: none;">
                         <h3>EPIs Recomendados para Manuseio Seguro:</h3>
-                        <div class="epi-lista" id="listaEpis">
-                            </div>
+                        <div class="epi-lista" id="listaEpis"></div>
                     </div>
                 </section>
             </div>
@@ -93,7 +98,6 @@
                     <ul>
                         <li><strong>Inalação:</strong> Vá imediatamente para um local aberto com ventilação natural.</li>
                         <li><strong>Contato com a pele/olhos:</strong> Lave abundantemente com água corrente por 15 minutos.</li>
-                        <li><strong>Não improvise:</strong> Não tente neutralizar jogando outro produto (como jogar vinagre na soda).</li>
                     </ul>
                     <div class="telefones-uteis">
                         <div class="tel-item"><strong>SAMU:</strong> 192</div>
@@ -101,9 +105,11 @@
                     </div>
                 </div>
 
-                <div class="info-card diretriz">
-                    <h3>💡 Boas Práticas Domésticas</h3>
-                    <p>Mantenha sempre os produtos em suas embalagens originais com rótulos visíveis. A maioria dos acidentes graves ocorre ao transferir líquidos para garrafas de refrigerante ou ao misturar soluções buscando uma "limpeza milagrosa".</p>
+                <div class="info-card historico">
+                    <h3>📋 Consultas Recentes</h3>
+                    <div id="listaHistorico" class="lista-historico">
+                        <p class="historico-vazio">Nenhuma mistura testada ainda.</p>
+                    </div>
                 </div>
             </aside>
 

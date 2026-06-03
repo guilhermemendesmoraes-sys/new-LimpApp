@@ -152,11 +152,47 @@ select:focus {
     align-items: center;
     gap: 15px;
     margin-bottom: 14px;
+    justify-content: space-between;
+}
+
+.titulo-wrapper {
+    flex: 1;
 }
 
 .resultado-icone { font-size: 28px; }
 .status-titulo { font-size: 22px; font-weight: 700; }
 .status-descricao { font-size: 15px; line-height: 1.6; color: #94a3b8; }
+
+/* Botões de Ações */
+.botoes-acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-acao {
+    background-color: var(--borda-padrao);
+    border: 1px solid transparent;
+    color: var(--texto-principal);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-acao:hover {
+    background-color: #2e4463;
+}
+
+.btn-danger {
+    background-color: #3f1e1e;
+    color: #f87171;
+}
+
+.btn-danger:hover {
+    background-color: #552424;
+}
 
 /* Bloco de EPIs */
 .epi-container {
@@ -229,6 +265,34 @@ select:focus {
     border-radius: 8px;
     font-size: 12px;
     text-align: center;
+}
+
+/* Histórico Lateral */
+.lista-historico {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.historico-item {
+    background-color: var(--bg-global);
+    border-left: 3px solid var(--borda-padrao);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12.5px;
+}
+
+.historico-item.p-seguro { border-left-color: var(--cor-seguro); }
+.historico-item.p-atencao { border-left-color: var(--cor-atencao); }
+.historico-item.p-perigo { border-left-color: var(--cor-perigo); }
+
+.historico-vazio {
+    font-size: 13px;
+    color: var(--texto-secundario);
+    text-align: center;
+    font-style: italic;
 }
 
 .app-footer { text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--borda-padrao); }
